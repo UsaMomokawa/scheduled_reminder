@@ -18,17 +18,20 @@ class PullRequestTest < Minitest::Test
   end
 
   def test_it_returns_remaining_reviewers
-    @pull_request.remaining_reviewers = ['hoge', 'fuga']
-    assert_equal ['hoge', 'fuga'], @pull_request.remaining_reviewers
+    @pull_request.requested_reviewers = ['hoge', 'fuga']
+    @pull_request.approvers = ['fuga']
+    assert_equal ['hoge'], @pull_request.remaining_reviewers
   end
 
   def test_it_returns_text
     @pull_request.title = 'タイトル'
     @pull_request.url = 'https://example.com'
-    @pull_request.remaining_reviewers = ['hoge', 'fuga']
+    @pull_request.requested_reviewers = ['hoge', 'fuga']
+    @pull_request.approvers = ['fuga']
+
     text = <<~TEXT
       <タイトル|https://example.com>
-      waiting on: @hoge, @fuga
+      waiting on: @hoge
     TEXT
     assert_equal text, @pull_request.text
   end

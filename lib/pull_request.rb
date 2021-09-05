@@ -1,17 +1,22 @@
 class PullRequest
-  attr_accessor :title, :url, :remaining_reviewers
+  attr_accessor :title, :url, :requested_reviewers, :approvers
   def initialize
     @title = ''
     @url = ''
-    @remaining_reviewers = []
+    @requested_reviewers = []
+    @approvers = []
+  end
+
+  def remaining_reviewers
+    requested_reviewers - approvers
   end
 
   def text
-    remaining_reviewers = @remaining_reviewers.map { |r| '@' + r }.join(', ')
+    mentions = remaining_reviewers.map { |r| '@' + r }.join(', ')
 
     text = <<~TEXT
       <#{@title}|#{@url}>
-      waiting on: #{remaining_reviewers}
+      waiting on: #{mentions}
     TEXT
   end
 end
