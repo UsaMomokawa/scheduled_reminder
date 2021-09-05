@@ -8,10 +8,15 @@ class RemindPullRequestTest < Minitest::Test
       []
     end
   end
+  class Slack
+    def chat_postMessage(options)
+    end
+  end
 
   def test_it_returns_text
-    client = RemindPullRequestTest::GitHub.new
-    remind = RemindPullRequest.new(client)
-    assert_equal "", remind.run
+    github = RemindPullRequestTest::GitHub.new
+    slack = RemindPullRequestTest::Slack.new
+    remind = RemindPullRequest.new(github, slack)
+    assert_equal nil, remind.run
   end
 end

@@ -30,7 +30,7 @@ class PullRequestTest < Minitest::Test
     @pull_request.approvers = ['fuga']
 
     text = <<~TEXT
-      <タイトル|https://example.com>
+      <https://example.com|タイトル>
       waiting on: @hoge
     TEXT
     assert_equal text, @pull_request.text

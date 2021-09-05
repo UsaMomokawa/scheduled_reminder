@@ -15,7 +15,7 @@ class PullRequest
     mentions = remaining_reviewers.map { |r| '@' + r }.join(', ')
 
     text = <<~TEXT
-      <#{@title}|#{@url}>
+      <#{@url}|#{@title}>
       waiting on: #{mentions}
     TEXT
   end

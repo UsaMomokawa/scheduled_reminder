@@ -13,7 +13,7 @@ class RemindPullRequest
     @pull_requests = waiting_for_review.map do |w|
       pull_request = PullRequest.new
       pull_request.title = w.title
-      pull_request.url = w.url
+      pull_request.url = w.html_url
       pull_request.requested_reviewers = w.requested_reviewers.map(&:login)
       pull_request.approvers = approvers(w.number)
 
@@ -23,8 +23,10 @@ class RemindPullRequest
     text = if @pull_requests.empty?
       ""
     else
-      @pull_requests.map(&:text).join('\n')
+      @pull_requests.map(&:text).join
     end
+
+    @slack.chat_postMessage(channel: '#random', text: text)
   end
 
   private

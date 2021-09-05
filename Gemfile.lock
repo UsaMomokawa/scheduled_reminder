@@ -23,6 +23,10 @@ GEM
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
+    faraday_middleware (1.1.0)
+      faraday (~> 1.0)
+    gli (2.20.1)
+    hashie (4.1.0)
     minitest (5.14.4)
     multipart-post (2.1.1)
     octokit (4.21.0)
@@ -33,6 +37,15 @@ GEM
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
+    slack-ruby-client (0.17.0)
+      faraday (>= 1.0)
+      faraday_middleware
+      gli
+      hashie
+      websocket-driver
+    websocket-driver (0.7.5)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.5)
 
 PLATFORMS
   x86_64-darwin-19
@@ -41,6 +54,7 @@ DEPENDENCIES
   dotenv
   minitest
   octokit
+  slack-ruby-client
 
 BUNDLED WITH
    2.2.20
