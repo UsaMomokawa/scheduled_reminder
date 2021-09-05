@@ -1,6 +1,7 @@
 
 require 'minitest/autorun'
 require './lib/remind_pull_request'
+require 'yaml'
 
 class RemindPullRequestTest < Minitest::Test
   class GitHub
@@ -16,7 +17,7 @@ class RemindPullRequestTest < Minitest::Test
   def test_it_returns_text
     github = RemindPullRequestTest::GitHub.new
     slack = RemindPullRequestTest::Slack.new
-    remind = RemindPullRequest.new(github, slack)
+    remind = RemindPullRequest.new(github, slack, 'channel', 'repo')
     assert_equal nil, remind.run
   end
 end

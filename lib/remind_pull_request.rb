@@ -1,16 +1,15 @@
-require 'dotenv'
-Dotenv.load
 require './lib/pull_request'
 
 class RemindPullRequest
-  def initialize(github, slack)
+  def initialize(github, slack, channel, repo)
     @github = github
     @slack = slack
-    @pull_requests = []
+    @channel = channel
+    @repo = repo
   end
 
   def run
-    @pull_requests = waiting_for_review.map do |w|
+    pull_requests = waiting_for_review.map do |w|
       pull_request = PullRequest.new
       pull_request.title = w.title
       pull_request.url = w.html_url
@@ -20,23 +19,22 @@ class RemindPullRequest
       pull_request
     end
 
-    text = if @pull_requests.empty?
-      ""
+    if pull_requests.empty?
+      nil
     else
-      @pull_requests.map(&:text).join
+      text = pull_requests.map(&:text).join
+      @slack.chat_postMessage(channel: @channel, text: text)
     end
-
-    @slack.chat_postMessage(channel: '#random', text: text)
   end
 
   private
 
     def waiting_for_review
-      @github.pulls(ENV['REPO'], state: 'open')
+      @github.pulls(@repo, state: 'open')
     end
 
     def approvers(pr_number)
-      approves = @github.pull_request_reviews(ENV['REPO'], pr_number)
+      approves = @github.pull_request_reviews(@repo, pr_number)
                         .select { |review| review.state == 'APPROVED' }
       approves.empty? ? [] : approvers.map { |ap| ap.user.login }
     end
