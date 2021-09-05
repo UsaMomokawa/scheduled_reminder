@@ -19,12 +19,13 @@ class RemindPullRequest
       pull_request
     end
 
-    if pull_requests.empty?
-      nil
-    else
-      text = pull_requests.map(&:text).join
-      @slack.chat_postMessage(channel: @channel, text: text)
-    end
+    return if pull_requests.empty?
+    @slack.chat_postMessage(channel: @channel, text: build_text(pull_requests))
+  end
+
+  def build_text(pull_requests)
+    text = "*Pending review on #{@repo}*\n"
+    text += pull_requests.map(&:text).join
   end
 
   private
