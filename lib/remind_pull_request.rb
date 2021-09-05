@@ -31,6 +31,7 @@ class RemindPullRequest
 
     def waiting_for_review
       @github.pulls(@repo, state: 'open')
+             .select { |pull| pull.labels.map(&:name).include?(ENV['PR_LABEL']) }
     end
 
     def approvers(pr_number)
