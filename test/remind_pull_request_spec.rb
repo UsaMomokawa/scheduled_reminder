@@ -1,7 +1,6 @@
 
 require 'minitest/autorun'
 require './lib/remind_pull_request'
-require 'yaml'
 
 class RemindPullRequestTest < Minitest::Test
   class GitHub
