@@ -23,3 +23,5 @@ PR_LABEL='waiting for review'
 ```
 rake remind_pull_request
 ```
+
+![sample](https://user-images.githubusercontent.com/42172002/132166956-cae0febe-57ee-4a20-88af-f5c2b270f492.jpg)
