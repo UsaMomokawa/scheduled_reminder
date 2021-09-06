@@ -12,13 +12,16 @@ class PullRequestTest < Minitest::Test
     end
   end
 
+  class Slack
+  end
+
   def setup
     @github = PullRequestTest::GitHub.new
   end
 
   def test_it_returns_mentions
     @pull_request = PullRequest.new(@github, requested_reviewers: ["hoge"])
-    assert_equal ["@hoge"], @pull_request.mentions
+    assert_equal ["@hoge"], @pull_request.mentions(PullRequestTest::Slack.new)
   end
 
   def test_it_returns_remaining_reviewers

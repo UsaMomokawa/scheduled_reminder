@@ -13,12 +13,12 @@ class PullRequest
     @requested_reviewers - approvers(@repo, @number)
   end
 
-  def mentions(&block)
+  def mentions(slack)
     remaining_reviewers.map do |reviewer|
-      email = @github.user(reviewer)&.email
-      if email
-        '@<' + yield(email) + '>'
-      else
+      begin
+        email = @github.user(reviewer).email
+        '@<' + @slack.users_lookupByEmail(email: email).user.id + '>'
+      rescue
         '@' + reviewer
       end
     end
