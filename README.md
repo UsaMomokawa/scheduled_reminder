@@ -1,6 +1,6 @@
 # scheduled_reminder
 ## Remind pull request
-- fill `settings.yml`
+- fill `config.yml`
 
 ```
 ---

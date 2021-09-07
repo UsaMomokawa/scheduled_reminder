@@ -34,7 +34,7 @@ class RemindPullRequestTest < Minitest::Test
       waiting on: @hoge
     TEXT
 
-    co = {'channel' => 'general', 'repo' => 'user/repo', 'pull_requests' => [pull_request]}
-    assert_equal text, @remind.build_text(co)
+    config = {'channel' => 'general', 'repo' => 'user/repo', 'pull_requests' => [pull_request]}
+    assert_equal text, @remind.build_text(config)
   end
 end

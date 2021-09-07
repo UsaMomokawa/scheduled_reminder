@@ -1,15 +1,15 @@
-class CollectPullRequest
-  def initialize(github, settings)
+class ConfigPullRequest
+  def initialize(github, configs = [])
     @github = github
-    @settings = settings
+    @configs = configs
   end
 
-  def run
-    @settings.each do |setting|
-      setting['pull_requests'] = pull_requests(setting['repo'])
+  def set
+    @configs.each do |config|
+      config['pull_requests'] = pull_requests(config['repo'])
     end
 
-    @settings
+    @configs
   end
 
   private

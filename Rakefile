@@ -6,13 +6,13 @@ Dotenv.load
 
 desc 'remind pull request'
 task :remind_pull_request do
-  require './lib/collect_pull_request'
+  require './lib/config_pull_request'
   require './lib/remind_pull_request'
 
   github = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
   slack = Slack::Web::Client.new(token: ENV['SLACK_BOT_TOKEN'])
-  settings = File.open('settings.yml') { |io| YAML.load_stream(io) }
+  configs = File.open('config.yml') { |io| YAML.load_stream(io) }
 
-  collect = CollectPullRequest.new(github, settings).run
-  RemindPullRequest.new(slack, collect).run
+  config = ConfigPullRequest.new(github, configs).set
+  RemindPullRequest.new(slack, config).run
 end
