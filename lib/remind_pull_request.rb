@@ -1,43 +1,29 @@
 require './lib/pull_request'
 
 class RemindPullRequest
-  def initialize(github, slack, channel, repo)
-    @github = github
+  def initialize(slack, configs)
     @slack = slack
-    @channel = channel
-    @repo = repo
+    @configs = configs
   end
 
   def run
-    pull_requests = waiting_for_review.map do |w|
-      pull_request = PullRequest.new
-      pull_request.title = w.title
-      pull_request.url = w.html_url
-      pull_request.requested_reviewers = w.requested_reviewers.map(&:login)
-      pull_request.approvers = approvers(w.number)
+    @configs.each do |config|
+      next if config['pull_requests'].empty?
 
-      pull_request
+      @slack.chat_postMessage(channel: config['channel'], text: build_text(config))
     end
-
-    return if pull_requests.empty?
-    @slack.chat_postMessage(channel: @channel, text: build_text(pull_requests))
   end
 
-  def build_text(pull_requests)
-    text = "*Pending review on #{@repo}*\n"
-    text += pull_requests.map(&:text).join
+  def build_text(config)
+    text = "*Pending review on #{config['repo']}*\n"
+
+    config['pull_requests'].each do |pull_request|
+      text += <<~TEXT
+        <#{pull_request.url}|#{pull_request.title}>
+        waiting on: #{pull_request.mentions(@slack).join(', ')}
+      TEXT
+    end
+
+    text
   end
-
-  private
-
-    def waiting_for_review
-      @github.pulls(@repo, state: 'open')
-             .select { |pull| pull.labels.map(&:name).include?(ENV['PR_LABEL']) }
-    end
-
-    def approvers(pr_number)
-      approves = @github.pull_request_reviews(@repo, pr_number)
-                        .select { |review| review.state == 'APPROVED' }
-      approves.empty? ? [] : approvers.map { |ap| ap.user.login }
-    end
 end
